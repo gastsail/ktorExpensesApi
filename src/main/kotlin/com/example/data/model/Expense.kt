@@ -9,11 +9,12 @@ val expenses = mutableListOf(
     Expense(id = 4, 15.0, "COFFEE", "Beans and cream"),
     Expense(id = 5, 25.0, "PARTY", "Weekend party"),
     Expense(id = 6, 120.0, "HOUSE", "Expenses"),
-    Expense(id = 7, 25.0, "OTHER", "CLEANING"))
+    Expense(id = 7, 25.0, "OTHER", "CLEANING")
+)
 
 @Serializable
 data class Expense(
-    val id:Long = expenses.size.toLong(),
+    val id: Long = expenses.size.toLong(),
     val amount: Double,
     val categoryName: String,
     val description: String

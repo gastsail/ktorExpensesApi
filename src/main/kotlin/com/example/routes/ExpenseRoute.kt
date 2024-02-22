@@ -28,7 +28,7 @@ fun Route.expensesRouting() {
     }
 
     post("/expenses") {
-        val expense = call.receive<Expense>()
+        val expense = call.receive<Expense>().copy(id = expenses.size.toLong() + 1)
         expenses.add(expense)
         call.respond(HttpStatusCode.Created, "Expense added successfully")
     }
@@ -36,11 +36,16 @@ fun Route.expensesRouting() {
     put("/expenses/{id}") {
         val id = call.parameters["id"]?.toLongOrNull()
         val expense = call.receive<Expense>()
-        if (id == null || id !in 0 until expenses.size) {
+        if (id == null) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Invalid expense ID"))
+            return@put
+        }
+        val index = expenses.indexOfFirst { it.id == id }
+        if (index == -1) {
             call.respond(HttpStatusCode.NotFound, ErrorResponse("Expense not found"))
             return@put
         }
-        expenses[id.toInt()] = expense.copy(id = id)
+        expenses[index] = expense.copy(id = id)
         call.respond(HttpStatusCode.OK, "Expense updated successfully")
     }
 }
