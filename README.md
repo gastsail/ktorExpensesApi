@@ -4,4 +4,8 @@
 - Ver la ip de nuestra maquina (ipconfig o ipv4 search en mac os)
 - Configurar esa ip en nuestra app KMP en ExpensesRepoImpl
 
-  
+## To run the server
+- Clone the repository and open it with the community edition of JetBrains -> https://www.jetbrains.com/es-es/idea/download/other.html
+- Run it from IntelliJ Idea to start the project, the server will be launched
+- Check the IP of our machine (ipconfig or ipv4 search on macOS)
+- Configure that IP in our KMP app in ExpensesRepoImpl
