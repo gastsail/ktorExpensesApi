@@ -54,5 +54,4 @@ fun Route.expensesRouting() {
         expenses.removeIf { it.id == id }
         call.respond(HttpStatusCode.OK, MessageResponse("Expense removed successfully"))
     }
-
 }
