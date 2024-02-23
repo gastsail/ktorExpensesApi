@@ -1,6 +1,6 @@
 package com.example.routes
 
-import com.example.data.model.ErrorResponse
+import com.example.data.model.MessageResponse
 import com.example.data.model.Expense
 import com.example.data.model.expenses
 import io.ktor.http.*
@@ -11,41 +11,48 @@ import io.ktor.server.routing.*
 
 fun Route.expensesRouting() {
     get("/expenses") {
-        if (expenses.isEmpty()) {
-            call.respondText("No expenses found", status = HttpStatusCode.OK)
+        if(expenses.isEmpty()) {
+            call.respondText { "No expenses found" }
         } else {
-            call.respond(HttpStatusCode.OK, expenses)
+            call.respond(status = HttpStatusCode.OK, expenses)
         }
     }
 
     get("/expenses/{id}") {
         val id = call.parameters["id"]?.toLongOrNull()
-        if (id == null || id !in 0 until expenses.size) {
-            call.respond(HttpStatusCode.NotFound, ErrorResponse("Expense not found"))
+        if(id == null || id !in 0 until expenses.size) {
+            call.respond(HttpStatusCode.NotFound, MessageResponse("Expense not found"))
             return@get
         }
         call.respond(HttpStatusCode.OK, expenses[id.toInt()])
     }
 
     post("/expenses") {
-        val expense = call.receive<Expense>().copy(id = expenses.size.toLong() + 1)
+        val expense = call.receive<Expense>()
         expenses.add(expense)
-        call.respond(HttpStatusCode.Created, "Expense added successfully")
+        call.respond(HttpStatusCode.OK, MessageResponse("Expense added successfully"))
     }
 
-    put("/expenses/{id}") {
+    put("expenses/{id}") {
         val id = call.parameters["id"]?.toLongOrNull()
         val expense = call.receive<Expense>()
-        if (id == null) {
-            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Invalid expense ID"))
+        if(id == null || id !in 0 until expenses.size) {
+            call.respond(HttpStatusCode.NotFound, MessageResponse("Expense not found"))
             return@put
         }
         val index = expenses.indexOfFirst { it.id == id }
-        if (index == -1) {
-            call.respond(HttpStatusCode.NotFound, ErrorResponse("Expense not found"))
-            return@put
-        }
         expenses[index] = expense.copy(id = id)
-        call.respond(HttpStatusCode.OK, "Expense updated successfully")
+        call.respond(HttpStatusCode.OK, MessageResponse("Expense updated successfully"))
     }
+
+    delete("expenses/{id}") {
+        val id = call.parameters["id"]?.toLongOrNull()
+        if(id == null || id !in 0 until expenses.size) {
+            call.respond(HttpStatusCode.NotFound, MessageResponse("Expense not found"))
+            return@delete
+        }
+        expenses.removeIf { it.id == id }
+        call.respond(HttpStatusCode.OK, MessageResponse("Expense removed successfully"))
+    }
+
 }

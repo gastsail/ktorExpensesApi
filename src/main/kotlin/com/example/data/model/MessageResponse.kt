@@ -3,6 +3,6 @@ package com.example.data.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ErrorResponse(
+data class MessageResponse(
     val message: String
 )
