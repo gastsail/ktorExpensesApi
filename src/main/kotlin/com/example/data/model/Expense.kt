@@ -12,8 +12,6 @@ val expenses = mutableListOf(
     Expense(id = 7, 25.0, "OTHER", "CLEANING")
 )
 
-var lastExpense = expenses.size.toLong()
-
 @Serializable
 data class Expense(
     val id: Long = -1,

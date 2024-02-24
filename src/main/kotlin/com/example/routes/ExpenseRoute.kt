@@ -1,15 +1,13 @@
 package com.example.routes
 
-import com.example.data.model.MessageResponse
 import com.example.data.model.Expense
+import com.example.data.model.MessageResponse
 import com.example.data.model.expenses
-import com.example.data.model.lastExpense
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlin.math.max
 
 fun Route.expensesRouting() {
     get("/expenses") {
@@ -22,16 +20,12 @@ fun Route.expensesRouting() {
 
     get("/expenses/{id}") {
         val id = call.parameters["id"]?.toLongOrNull()
-        if(id == null || id !in 0 until expenses.size) {
+        val expense = expenses.find { it.id == id }
+        if(id == null || expense == null) {
             call.respond(HttpStatusCode.NotFound, MessageResponse("Expense not found"))
             return@get
         }
-        val expense = expenses.find { it.id == id }
-        if(expense != null) {
-            call.respond(HttpStatusCode.OK, expense)
-        } else {
-            call.respond(HttpStatusCode.NotFound, MessageResponse("Expense not found"))
-        }
+        call.respond(HttpStatusCode.OK, expense)
     }
 
     post("/expenses") {
