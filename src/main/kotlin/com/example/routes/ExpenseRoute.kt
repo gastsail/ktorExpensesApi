@@ -11,11 +11,7 @@ import io.ktor.server.routing.*
 
 fun Route.expensesRouting() {
     get("/expenses") {
-        if(expenses.isEmpty()) {
-            call.respondText { "No expenses found" }
-        } else {
-            call.respond(status = HttpStatusCode.OK, expenses)
-        }
+        call.respond(status = HttpStatusCode.OK, expenses)
     }
 
     get("/expenses/{id}") {
@@ -49,7 +45,8 @@ fun Route.expensesRouting() {
 
     delete("expenses/{id}") {
         val id = call.parameters["id"]?.toLongOrNull()
-        if(id == null || id !in 0 until expenses.size) {
+        val expense = expenses.find { it.id == id }
+        if(id == null || expense == null) {
             call.respond(HttpStatusCode.NotFound, MessageResponse("Expense not found"))
             return@delete
         }
