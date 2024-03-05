@@ -12,11 +12,7 @@ import io.ktor.server.routing.*
 fun Route.expensesRouting() {
 
     get("/expenses") {
-        if(expenses.isEmpty()) {
-            call.respondText { "No expenses found" }
-        } else {
-            call.respond(status = HttpStatusCode.OK, expenses)
-        }
+        call.respond(status = HttpStatusCode.OK, expenses)
     }
 
     get("/expenses/{id}") {
